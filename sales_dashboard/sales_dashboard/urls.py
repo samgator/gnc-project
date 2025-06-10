@@ -6,4 +6,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('',  homepage, name='homepage'),
     path('forecast/', include('forecast.urls')),
+    path('blockchainproject/', include('blockchainproject.urls')),
 ]

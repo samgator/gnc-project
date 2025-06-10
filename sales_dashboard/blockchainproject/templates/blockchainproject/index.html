@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect MetaMask</title>
+    <script>
+        async function connectMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+                    document.getElementById('wallet-address').innerText = 'Connected: ' + account;
+                } catch (error) {
+                    console.error('User rejected the request.');
+                }
+            } else {
+                alert('MetaMask is not installed. Please install it to use this feature.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Connect Your Wallet</h1>
+    <button onclick="connectMetaMask()">Connect MetaMask</button>
+    <p id="wallet-address"></p>
+</body>
+</html>
