@@ -1,0 +1,37 @@
+<form method="post" id="signup-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="hidden" name="metamask_wallet" id="metamask_wallet" />
+
+    <button type="button" id="connectWalletBtn">Connect Metamask Wallet</button>
+
+    <button type="submit">Sign Up</button>
+</form>
+
+<script>
+async function connectWallet() {
+    if (window.ethereum) {
+        try {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const walletAddress = accounts[0];
+            document.getElementById('metamask_wallet').value = walletAddress;
+            alert('Wallet connected: ' + walletAddress);
+        } catch (error) {
+            alert('Could not connect wallet: ' + error.message);
+        }
+    } else {
+        alert('Metamask not detected. Please install Metamask extension.');
+    }
+}
+
+document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
+
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+    const wallet = document.getElementById('metamask_wallet').value;
+    if (!wallet) {
+        event.preventDefault();
+        alert('Please connect your Metamask wallet before signing up.');
+    }
+});
+</script>

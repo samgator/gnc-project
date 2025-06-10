@@ -1,9 +1,14 @@
 from decouple import config
 from pathlib import Path
+import yaml
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+with open(os.path.join(BASE_DIR, 'conf.yaml')) as file:
+    secrets = yaml.safe_load(file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -42,10 +47,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "sales_dashboard.urls"
 
+LOGIN_REDIRECT_URL = '/' 
+LOGOUT_REDIRECT_URL = '/'
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'blockchainproject' / 'templates', BASE_DIR / 'forecast' / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -65,18 +73,16 @@ WSGI_APPLICATION = "sales_dashboard.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config('DB_NAME'),
-        "USER": config('DB_USER'),
-        "PASSWORD": config('DB_PASSWORD'),
-        "HOST": config('DB_HOST', default='localhost'),
-        "PORT": config('DB_PORT', default='3306'),
-        "OPTIONS": {
-            'init_command': "SET sql_mode=\"STRICT_TRANS_TABLES\"",
-        },
+        'ENGINE': secrets['db']['default']['ENGINE'],
+        'NAME': secrets['db']['default']['NAME'],
+        'USER': secrets['db']['default']['USER'],
+        'PASSWORD': secrets['db']['default']['PASSWORD'],
+        'HOST': secrets['db']['default']['HOST'],
+        'PORT': secrets['db']['default']['PORT'],
     }
 }
 
+AUTH_USER_MODEL = 'blockchainproject.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
