@@ -2,50 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blockchain Project</title>
     <style>
-        html, body {
-            font-family: Arial, sans-serif;
-            text-align: center;
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            box-sizing: border-box;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 2rem 0;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 1rem 0 2rem;
+            color: var(--primary-color);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .auth-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        #wallet-address {
-            margin-top: 20px;
-            font-weight: bold;
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+            background-color: #2980b9;
         }
+
+        .auth-button.logout {
+            background-color: var(--accent-color);
+        }
+
+        .auth-button.logout:hover {
+            background-color: #c0392b;
+        }
+
+        #walletAddress {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem auto;
+            max-width: 600px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            word-break: break-all;
+        }
+
         footer {
             position: absolute;
             bottom: 0;
             width: 100%;
             height: 60px;
-            background-color: #222;
-            color: #eee;
+            background-color: var(--primary-color);
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1rem;
-            overflow-x: hidden;
+            font-size: 0.9rem;
         }
-        .auth-button {
-            display: inline-block;
-            margin: 20px;
-            padding: 20px 40px;
-            font-size: 1.2rem;
-            background-color: #f5f5f5;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #333;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease;
-        }
-        .auth-button:hover {
-            background-color: #e0f7fa;
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .auth-button {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
     <script>
@@ -62,24 +139,50 @@
                 alert('MetaMask is not installed. Please install it to use this feature.');
             }
         }
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const showWalletBtn = document.getElementById('showWallet');
+            const walletDiv = document.getElementById('walletAddress');
+
+            if (showWalletBtn && walletDiv) {
+                showWalletBtn.addEventListener('click', function () {
+                if (walletDiv.style.display === 'none') {
+                    walletDiv.style.display = 'block';
+                    showWalletBtn.innerText = 'Hide Wallet Address';
+                } else {
+                    walletDiv.style.display = 'none';
+                    showWalletBtn.innerText = 'Display Wallet Address';
+                }
+                });
+            }
+        });
+
     </script>
+    
 </head>
 <body>
-    <h1>Blockchain Project</h1>
-    <a class="auth-button" href="{% url 'register' %}">Register</a>
-    <a class="auth-button" href="{% url 'login' %}">Login</a>
-
-    {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}!</p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="auth-button">Logout</button>
-        </form>
-        <a class="auth-button" href="{% url 'logout' %}">Log Out</a>
-    {% endif %}
-
-    <a class="auth-button" onclick="connectMetaMask()">Connect MetaMask</a>
-    <p id="wallet-address"></p>
+    <div class="container">
+        <h1>Blockchain Project</h1>
+        {% if not user.is_authenticated %}
+        <div class="button-container">
+            <a class="auth-button" href="{% url 'register' %}">Register</a>
+            <a class="auth-button" href="{% url 'login' %}">Login</a>
+        </div>
+        {% else %}
+            <p class="welcome-message">Welcome, {{ user.username }}!</p>
+            <div class="button-container">
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="auth-button logout">Logout</button>
+                </form>
+                <a id="showWallet" class="auth-button">Display Wallet Address</a>
+            </div>
+            <div id="walletAddress" style="display: none;">
+                Your connected wallet: {{ user.wallet_address }}
+            </div>
+        {% endif %}
+    </div>
+    
     <footer>
         <p>&copy; 2025 Sam Morsics, Marius Donnelly, Parker Wise, Maggie L.</p>
     </footer>

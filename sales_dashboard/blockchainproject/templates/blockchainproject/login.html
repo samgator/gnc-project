@@ -1,7 +1,104 @@
-<h2>Log In</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
-</form>
-<a href="{% url 'register' %}">Don't have an account? Sign up</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #f8f9fa;
+            --card-bg: #fff;
+            --input-bg: #f5f5f5;
+            --input-border: #ccc;
+            --button-bg: #3498db;
+            --button-hover: #2980b9;
+            --text-color: #2c3e50;
+        }
+        body {
+            background: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem 2rem 2rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input[type="text"], input[type="password"], input[type="email"] {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            font-size: 1rem;
+            color: var(--text-color);
+            outline: none;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+            border: 1.5px solid var(--secondary-color);
+        }
+        button[type="submit"] {
+            background: var(--button-bg);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            margin-top: 0.5rem;
+        }
+        button[type="submit"]:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+        }
+        .register-link {
+            display: block;
+            margin-top: 1.5rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .register-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        @media (max-width: 500px) {
+            .card {
+                padding: 1.5rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Log In</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Log In</button>
+        </form>
+        <a class="register-link" href="{% url 'register' %}">Don't have an account? Sign up</a>
+    </div>
+</body>
+</html>

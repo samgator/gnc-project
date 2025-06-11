@@ -47,8 +47,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "sales_dashboard.urls"
 
-LOGIN_REDIRECT_URL = '/' 
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/blockchainproject/' 
+LOGOUT_REDIRECT_URL = '/blockchainproject/'
 
 TEMPLATES = [
     {

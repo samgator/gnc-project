@@ -10,7 +10,7 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.metamask_wallet = request.POST.get('metamask_wallet', '')
+            user.wallet_address = request.POST.get('metamask_wallet', '')
             user.save()
             login(request, user)
             return redirect('/blockchainproject/')
