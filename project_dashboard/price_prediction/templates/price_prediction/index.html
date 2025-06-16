@@ -115,20 +115,50 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: 'line',
                 data: {
                     labels: data.dates,
-                    datasets: [{
-                        label: 'Predicted Price',
-                        data: data.predictions,
-                        borderColor: '#3498db',
-                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
+                    datasets: [
+                        {
+                            label: 'Predicted Price',
+                            data: data.predictions,
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Upper Bound',
+                            data: data.upper_bound,
+                            borderColor: 'rgba(46, 204, 113, 0.5)',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Lower Bound',
+                            data: data.lower_bound,
+                            borderColor: 'rgba(231, 76, 60, 0.5)',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const confidence = data.confidence_scores[context.dataIndex];
+                                    return [
+                                        `Price: $${context.raw.toLocaleString()}`,
+                                        `Confidence: ${(confidence * 100).toFixed(1)}%`
+                                    ];
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -146,6 +176,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
+
+            // Show model metrics
+            const metricsHtml = `
+                <div class="model-metrics">
+                    <h3>Model Performance</h3>
+                    <div class="metrics-grid">
+                        <div class="metric">
+                            <span class="metric-label">RMSE</span>
+                            <span class="metric-value">$${data.model_metrics.rmse.toFixed(2)}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">MAE</span>
+                            <span class="metric-value">$${data.model_metrics.mae.toFixed(2)}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">R² Score</span>
+                            <span class="metric-value">${(data.model_metrics.r2 * 100).toFixed(1)}%</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.prediction-result').insertAdjacentHTML('beforeend', metricsHtml);
 
         } catch (error) {
             showError('Error fetching prediction data');
@@ -327,6 +379,46 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 500;
 }
 
+.model-metrics {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.model-metrics h3 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.metric {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.metric-label {
+    display: block;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    display: block;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 @media (max-width: 768px) {
     .dashboard-header {
         flex-direction: column;
@@ -341,6 +433,10 @@ document.addEventListener('DOMContentLoaded', function() {
     .price-value {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
     }
 }
 </style>
