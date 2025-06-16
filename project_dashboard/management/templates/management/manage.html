@@ -1,0 +1,38 @@
+<style>
+    :root {
+        --primary-color: #4a90e2;
+        --error-color: #e74c3c;
+        --success-color: #2ecc71;
+        --text-color: #333;
+        --bg-color: #f5f6fa;
+        --card-bg: #ffffff;
+        --border-color: #dcdde1;
+        --secondary-color: #3498db;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+        --primary-color: #3498db;
+        --error-color: #e74c3c;
+        --success-color: #2ecc71;
+        --text-color: #ecf0f1;
+        --bg-color: #2c3e50;
+        --card-bg: #34495e;
+        --border-color: #7f8c8d;
+        --secondary-color: #3498db;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-toggle {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+
+    .theme-toggle:hover {
+        color: var(--primary-color);
+    }
+</style> 

@@ -16,5 +16,6 @@ pyvenv.cfg
 pip-selfcheck.json
 .env
 conf.yaml
+venv/
 
 # End of https://www.toptal.com/developers/gitignore/api/venv

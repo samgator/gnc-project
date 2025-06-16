@@ -1,0 +1,390 @@
+{% extends 'blockchainproject/base.html' %}
+
+{% block title %}Token Dashboard{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.logout-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+.wallet-section {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section-title {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.wallet-info {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.info-group {
+    margin-bottom: 1.5rem;
+}
+
+.info-group label {
+    display: block;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.address-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.address-container input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-family: monospace;
+}
+
+.copy-btn, .visibility-btn {
+    padding: 0.75rem 1rem;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover, .visibility-btn:hover {
+    background-color: #2980b9;
+}
+
+.copy-btn.success {
+    background-color: #27ae60;
+}
+
+.balance-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.balance {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.refresh-btn {
+    padding: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.action-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.auth-section {
+    text-align: center;
+    padding: 2rem;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.auth-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.auth-section p {
+    color: var(--text-color);
+    margin-bottom: 2rem;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.auth-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.login-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.register-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.register-btn:hover {
+    background-color: #34495e;
+    transform: translateY(-2px);
+}
+
+.error {
+    color: var(--accent-color);
+}
+
+.success {
+    color: #27ae60;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .wallet-info {
+        padding: 1.5rem;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="dashboard-header">
+        <h1>THUMB Dashboard</h1>
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'blockchainproject:logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        {% endif %}
+    </div>
+    
+    {% if user.is_authenticated %}
+        <div class="wallet-section">
+            <h2 class="section-title">
+                <i class="fas fa-wallet"></i> Your Wallet
+            </h2>
+            
+            <div class="wallet-info">
+                <div class="info-group">
+                    <label>Wallet Address:</label>
+                    <div class="address-container">
+                        <input type="text" id="walletAddress" value="{{ user.wallet_address }}" readonly>
+                        <button onclick="copyToClipboard('{{ user.wallet_address }}')" class="copy-btn" title="Copy Address">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button onclick="toggleAddressVisibility()" class="visibility-btn" title="Show/Hide Address">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="info-group">
+                    <label>Token Balance:</label>
+                    <div class="balance-container">
+                        <div id="tokenBalance" class="balance">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                        </div>
+                        <button id="refreshBalance" class="refresh-btn" title="Refresh Balance">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="{% url 'blockchainproject:transfer' %}" class="action-btn">
+                    <i class="fas fa-exchange-alt"></i> Transfer Tokens
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="auth-section">
+            <div class="auth-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2>Welcome to Token Dashboard</h2>
+            <p>Please log in to view your token balance and transfer tokens.</p>
+            <div class="auth-buttons">
+                <a href="{% url 'blockchainproject:login' %}" class="auth-btn login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="{% url 'blockchainproject:register' %}" class="auth-btn register-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const balanceElement = document.getElementById('tokenBalance');
+    const refreshButton = document.getElementById('refreshBalance');
+
+    function updateBalance() {
+        balanceElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+        fetch('{% url "blockchainproject:get_balance" %}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    balanceElement.innerHTML = `
+                        <span class="error">
+                            <i class="fas fa-exclamation-circle"></i> ${data.error}
+                        </span>`;
+                } else {
+                    balanceElement.innerHTML = `
+                        <span class="success">
+                            <i class="fas fa-coins"></i> ${data.balance} tokens
+                        </span>`;
+                }
+            })
+            .catch(error => {
+                balanceElement.innerHTML = `
+                    <span class="error">
+                        <i class="fas fa-exclamation-circle"></i> Error loading balance
+                    </span>`;
+                console.error('Error:', error);
+            });
+    }
+
+    // Initial balance load
+    updateBalance();
+
+    // Refresh balance on button click
+    refreshButton.addEventListener('click', function() {
+        this.classList.add('fa-spin');
+        updateBalance();
+        setTimeout(() => this.classList.remove('fa-spin'), 1000);
+    });
+});
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i>';
+        button.classList.add('success');
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('success');
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+function toggleAddressVisibility() {
+    const input = document.getElementById('walletAddress');
+    const button = event.target.closest('button');
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+</script>
+{% endif %}
+{% endblock %}

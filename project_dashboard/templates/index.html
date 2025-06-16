@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Project Dashboard{% endblock %}
+
+{% block content %}
+<h1>Project Dashboard</h1>
+
+<div class="card" style="max-width: 800px;">
+    <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Welcome to the Project Dashboard</h2>
+    <p style="color: var(--text-color); margin-bottom: 1rem; opacity: 0.8;">
+        This dashboard provides access to two main projects:
+    </p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+        <a href="/forecast/chart/" style="text-decoration: none;">
+            <div class="card" style="text-align: center; cursor: pointer; transition: transform 0.3s ease;">
+                <i class="fas fa-chart-line" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Sales Forecast</h3>
+                <p style="color: var(--text-color); opacity: 0.8;">Upload CSV data to generate sales forecasts</p>
+            </div>
+        </a>
+        
+        <a href="/blockchainproject/" style="text-decoration: none;">
+            <div class="card" style="text-align: center; cursor: pointer; transition: transform 0.3s ease;">
+                <i class="fas fa-link" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Blockchain Project</h3>
+                <p style="color: var(--text-color); opacity: 0.8;">Manage blockchain project data and users</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Add hover effect to cards
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+{% endblock %} 
